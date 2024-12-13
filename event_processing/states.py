@@ -1,11 +1,16 @@
+from typing import Self
+
 from pandas import Series
 
 from event_processing.context import BakingContext
-from typing import Self
 
 
 class InitialState:
-    def process_event(self, context: BakingContext, event: Series) -> Self:
+    def process_event(
+        self,
+        context: BakingContext,
+        event: Series,
+    ) -> Self | "PreheatingState":
         """
         Состояние выбора программы. Начало процесса выпечки.
         Args:
@@ -22,7 +27,11 @@ class InitialState:
 
 
 class PreheatingState:
-    def process_event(self, context: BakingContext, event: Series) -> Self:
+    def process_event(
+        self,
+        context: BakingContext,
+        event: Series,
+    ) -> Self | "DoorControlState":
         """
         Состояние завершения преднагрева печки.
         Args:
@@ -38,7 +47,11 @@ class PreheatingState:
 
 
 class DoorControlState:
-    def process_event(self, context: BakingContext, event: Series) -> Self:
+    def process_event(
+        self,
+        context: BakingContext,
+        event: Series,
+    ) -> Self | "BakingStartState":
         """
         Состояние открытия/закрытия дверей печки.
         Args:
@@ -54,7 +67,11 @@ class DoorControlState:
 
 
 class BakingStartState:
-    def process_event(self, context: BakingContext, event: Series) -> Self:
+    def process_event(
+        self,
+        context: BakingContext,
+        event: Series,
+    ) -> Self | "BakingEndState":
         """
         Состояние начала выпекания.
         Args:
@@ -71,7 +88,11 @@ class BakingStartState:
 
 
 class BakingEndState:
-    def process_event(self, context: BakingContext, event: Series) -> Self:
+    def process_event(
+        self,
+        context: BakingContext,
+        event: Series,
+    ) -> Self | "InitialState":
         """
         Состояние завершения или прерывания выпекания.
         Args:
